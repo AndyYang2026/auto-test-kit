@@ -3,6 +3,7 @@ name: Python Automation Tests
 on:
   push:
     branches: [main]
+  workflow_dispatch:   # ✅ 关键]
   pull_request:
     branches: [main]
 
