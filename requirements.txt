@@ -1,0 +1,10 @@
+pytest==8.0.0
+pytest-playwright==0.4.0
+pytest-xdist==3.5.0
+requests==2.31.0
+responses==0.25.0
+pymysql==1.1.0
+sqlalchemy==2.0.27
+allure-pytest==2.13.5
+ruff==0.3.0
+python-dotenv==1.0.1
