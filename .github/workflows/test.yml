@@ -3,13 +3,13 @@ name: Python Automation Tests
 on:
   push:
     branches: [main]
-  workflow_dispatch:   # ✅ 关键]
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-22.04
+    env:
+      PYTHONPATH: .
 
     steps:
       - name: Checkout code
@@ -26,9 +26,27 @@ jobs:
           pip install -r requirements.txt
 
       - name: Install Playwright browsers
-        run: |
-          playwright install --with-deps chromium
+        run: python -m playwright install --with-deps chromium
 
-      - name: Run tests
-        run: |
-          pytest
+      - name: Run tests with Allure
+        run: python -m pytest --alluredir=allure-results
+
+      - name: Upload Allure results
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        with:
+          allure_results: allure-results
+          allure_history: allure-history
+
+      - name: Deploy Allure Report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-history
